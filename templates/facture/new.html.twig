@@ -1,0 +1,97 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Créer une facture
+{% endblock %}
+
+{% block body %}
+	<h1>Créer une nouvelle facture</h1>
+
+	<form method="post">
+		<label for="numeroFacture">Numéro facture:</label>
+		<input type="text" id="numeroFacture" name="numeroFacture" required><br>
+
+		<label for="dateFacture">Date facture:</label>
+		<input type="date" id="dateFacture" name="dateFacture" required><br>
+
+		<label for="typeFacture">Type facture:</label>
+		<input type="text" id="typeFacture" name="typeFacture" maxlength="10" required><br>
+
+		<label for="devise">Devise:</label>
+		<input type="text" id="devise" name="devise" maxlength="3" required><br>
+
+		<label for="nomFournisseur">Nom fournisseur:</label>
+		<input type="text" id="nomFournisseur" name="nomFournisseur" required><br>
+
+		<label for="sirenFournisseur">SIREN fournisseur:</label>
+		<input type="text" id="sirenFournisseur" name="sirenFournisseur" maxlength="20" required><br>
+
+		<label for="siretFournisseur">SIRET fournisseur:</label>
+		<input type="text" id="siretFournisseur" name="siretFournisseur"><br>
+
+		<label for="tvaFournisseur">TVA fournisseur:</label>
+		<input type="text" id="tvaFournisseur" name="tvaFournisseur"><br>
+
+		<label for="codePaysFournisseur">Pays fournisseur (code):</label>
+		<input type="text" id="codePaysFournisseur" name="codePaysFournisseur" maxlength="2" required><br>
+
+		<label for="emailFournisseur">Email fournisseur:</label>
+		<input type="email" id="emailFournisseur" name="emailFournisseur" required><br>
+
+		<label for="nomAcheteur">Nom acheteur:</label>
+		<input type="text" id="nomAcheteur" name="nomAcheteur" required><br>
+
+		<label for="sirenAcheteur">SIREN acheteur:</label>
+		<input type="text" id="sirenAcheteur" name="sirenAcheteur" maxlength="20" required><br>
+
+		<label for="emailAcheteur">Email acheteur:</label>
+		<input type="email" id="emailAcheteur" name="emailAcheteur" required><br>
+
+		<label for="commandeAcheteur">Commande acheteur:</label>
+		<input type="text" id="commandeAcheteur" name="commandeAcheteur"><br>
+
+		<label for="totalHT">Montant HT:</label>
+		<input type="number" step="0.01" id="totalHT" name="totalHT" required><br>
+
+		<label for="totalTVA">Montant TVA:</label>
+		<input type="number" step="0.01" id="totalTVA" name="totalTVA" required><br>
+
+		<label for="totalTTC">Montant TTC:</label>
+		<input type="number" step="0.01" id="totalTTC" name="totalTTC" required><br>
+
+		<label for="netAPayer">Net à payer:</label>
+		<input type="number" step="0.01" id="netAPayer" name="netAPayer" required><br>
+
+		<label for="dateEcheance">Date échéance:</label>
+		<input type="date" id="dateEcheance" name="dateEcheance"><br>
+
+		<label for="dateLivraison">Date livraison:</label>
+		<input type="date" id="dateLivraison" name="dateLivraison"><br>
+
+		<label for="modePaiement">Mode paiement:</label>
+		<input type="text" id="modePaiement" name="modePaiement"><br>
+
+		<label for="referencePaiement">Référence paiement:</label>
+		<input type="text" id="referencePaiement" name="referencePaiement"><br>
+
+		<label for="tvaDetails">Détail TVA (JSON):</label>
+		<input type="text" id="tvaDetails" name="tvaDetails"><br>
+
+		<label for="remisePied">Remise pied:</label>
+		<input type="number" step="0.01" id="remisePied" name="remisePied"><br>
+
+		<label for="chargesPied">Charges pied:</label>
+		<input type="number" step="0.01" id="chargesPied" name="chargesPied"><br>
+
+		<label for="referenceContrat">Référence contrat:</label>
+		<input type="text" id="referenceContrat" name="referenceContrat"><br>
+
+		<label for="referenceBonLivraison">Référence BL:</label>
+		<input type="text" id="referenceBonLivraison" name="referenceBonLivraison"><br>
+
+		<label for="profilFacturX">Profil Factur-X:</label>
+		<input type="text" id="profilFacturX" name="profilFacturX" maxlength="20" required><br>
+
+		<button type="submit">Enregistrer la facture</button>
+	</form>
+{% endblock %}
+
