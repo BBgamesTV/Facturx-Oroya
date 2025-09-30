@@ -1,0 +1,236 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Nouvelle Facture
+{% endblock %}
+
+{% block body %}
+
+	<style>
+		body {
+			font-family: 'Segoe UI', 'Roboto', 'Arial', sans-serif;
+			background: #f5f6fa;
+			color: #222;
+			margin: 0;
+			padding: 0;
+		}
+		h1 {
+			text-align: center;
+			font-size: 2.2em;
+			margin-bottom: 1em;
+			color: #273c75;
+		}
+		.form-card {
+			background: #fff;
+			max-width: 700px;
+			margin: 2em auto;
+			border-radius: 16px;
+			box-shadow: 0 4px 24px rgba(44, 62, 80, 0.08);
+			padding: 2em;
+		}
+		fieldset {
+			border: none;
+			margin-bottom: 2em;
+			padding: 0;
+		}
+		legend {
+			font-size: 1.3em;
+			color: #0097e6;
+			margin-bottom: 1em;
+			font-weight: 600;
+		}
+		label {
+			display: block;
+			margin-bottom: 0.7em;
+			color: #353b48;
+		}
+		input[type="text"],
+		input[type="number"],
+		input[type="date"],
+		select {
+			width: 96%;
+			padding: 0.6em 0.9em;
+			margin-top: 3px;
+			background: #f1f2f6;
+			border: 1px solid #dcdde1;
+			border-radius: 7px;
+			font-size: 1em;
+			transition: border 0.2s;
+		}
+		input:focus,
+		select:focus {
+			border-color: #0097e6;
+			outline: none;
+		}
+		.flash-success {
+			background: #4cd137;
+			color: #fff;
+			padding: 0.7em 1em;
+			border-radius: 6px;
+			margin-bottom: 1em;
+			text-align: center;
+			font-size: 1.1em;
+			box-shadow: 0 2px 6px rgba(76, 209, 55, 0.09);
+		}
+		.line-item {
+			background: #f9f9f9;
+			margin-bottom: 1.5em;
+			padding: 1.2em 1em;
+			border-radius: 9px;
+			box-shadow: 0 2px 12px rgba(41, 128, 185, 0.07);
+			border-left: 4px solid #0097e6;
+		}
+		.allowances {
+			margin-top: 1em;
+			padding-left: 1.2em;
+		}
+		.allowance-item {
+			display: flex;
+			flex-wrap: wrap;
+			gap: 0.8em;
+			align-items: center;
+		}
+		.allowance-item label {
+			margin-bottom: 0;
+			font-size: 0.97em;
+		}
+		button[type="button"],
+		button[type="submit"] {
+			padding: 0.7em 1.3em;
+			border-radius: 8px;
+			border: none;
+			background: linear-gradient(90deg, #0097e6 0, #4078c0 90%);
+			color: #fff;
+			font-size: 1.12em;
+			font-weight: 500;
+			margin-right: 0.35em;
+			box-shadow: 0 2px 6px rgba(0, 151, 230, 0.14);
+			cursor: pointer;
+			transition: background 0.2s;
+		}
+		button[type="button"]:hover,
+		button[type="submit"]:hover {
+			background: linear-gradient(90deg, #273c75 0, #0097e6 90%);
+		}
+		@media(max-width: 800px) {
+			.form-card {
+				max-width: 90%;
+				padding: 1em;
+			}
+			h1 {
+				font-size: 1.5em;
+			}
+		}
+	</style>
+
+	<div class="form-card">
+		<h1>Créer une nouvelle facture</h1>
+
+		{% for message in app.flashes('success') %}
+			<div class="flash-success">{{ message }}</div>
+		{% endfor %}
+
+		<form method="post" action="{{ path('invoice_create_facturx') }}">
+
+			<fieldset>
+				<legend>Informations de la facture</legend>
+				<label>Numéro de facture:
+					<input type="text" name="invoiceNumber" required></label>
+				<label>Date:
+					<input type="date" name="issueDate" value="{{ "now"|date('Y-m-d') }}" required></label>
+				<label>Devise:
+					<input type="text" name="currency" value="EUR"></label>
+				<label>Référence paiement:
+					<input type="text" name="paymentReference"></label>
+			</fieldset>
+
+			<fieldset>
+				<legend>Vendeur</legend>
+				<label>Nom:
+					<input type="text" name="seller[name]"></label>
+				<label>Adresse:
+					<input type="text" name="seller[address]"></label>
+				<label>Ville:
+					<input type="text" name="seller[city]"></label>
+				<label>Code postal:
+					<input type="text" name="seller[zip]"></label>
+				<label>Pays:
+					<input type="text" name="seller[country]"></label>
+			</fieldset>
+
+			<fieldset>
+				<legend>Acheteur</legend>
+				<label>Nom:
+					<input type="text" name="buyer[name]"></label>
+				<label>Adresse:
+					<input type="text" name="buyer[address]"></label>
+				<label>Ville:
+					<input type="text" name="buyer[city]"></label>
+				<label>Code postal:
+					<input type="text" name="buyer[zip]"></label>
+				<label>Pays:
+					<input type="text" name="buyer[country]"></label>
+			</fieldset>
+
+			<fieldset id="lines-fieldset">
+				<legend>Lignes de facture</legend>
+				<div class="line-item">
+					<label>Produit:
+						<input type="text" name="lines[0][productName]" required></label>
+					<label>Description:
+						<input type="text" name="lines[0][description]"></label>
+					<label>Quantité:
+						<input type="number" step="0.01" name="lines[0][quantity]" value="1"></label>
+					<label>Prix net:
+						<input type="number" step="0.01" name="lines[0][netPrice]"></label>
+					<label>Prix brut:
+						<input type="number" step="0.01" name="lines[0][grossPrice]"></label>
+					<label>TVA %:
+						<input type="number" step="0.01" name="lines[0][taxRate]"></label>
+					<label>Unité:
+						<input type="text" name="lines[0][unit]" value="NAR"></label>
+					<div class="allowances">
+						<h4>Remises & Charges</h4>
+						<div class="allowance-item">
+							<label>Type:
+								<select name="lines[0][allowances][0][charge]">
+									<option value="0">Remise</option>
+									<option value="1">Charge</option>
+								</select>
+							</label>
+							<label>Montant:
+								<input type="number" step="0.01" name="lines[0][allowances][0][amount]"></label>
+							<label>Raison:
+								<input type="text" name="lines[0][allowances][0][reason]"></label>
+						</div>
+					</div>
+				</div>
+			</fieldset>
+			<button type="button" id="add-line-btn">Ajouter une ligne</button>
+			<br><br>
+			<button type="submit">Créer Facture</button>
+		</form>
+	</div>
+
+	<script>
+		let lineIndex = 1;
+document.getElementById('add-line-btn').addEventListener('click', function () {
+const fieldset = document.getElementById('lines-fieldset');
+const newLine = document.querySelector('.line-item').cloneNode(true);
+// Réinitialise les valeurs et met à jour les index
+newLine.querySelectorAll('input, select').forEach(input => {
+input.name = input.name.replace(/\d+/, lineIndex);
+if (input.type !== 'text') 
+input.value = '';
+
+
+});
+fieldset.appendChild(newLine);
+lineIndex++;
+});
+	</script>
+
+{% endblock %}
+
+{# 
+    Affichage similaire à celui de pdf.html.twig pour la cohérence visuelle.
+    Le formulaire permet de créer une nouvelle facture avec des champs dynamiques pour les lignes de facture. "#}
