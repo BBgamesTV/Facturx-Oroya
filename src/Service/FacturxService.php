@@ -14,7 +14,7 @@ class FacturxService
         $facturxPdf = $writer->generate(
             $pdfContent,      
             $xmlContent,      
-            null,             
+            "wl",             
             false,             
             [],               
             false,            

@@ -63,13 +63,19 @@ class InvoiceController extends AbstractController
         ]);
     }
 
-    #[Route('/delete/{id}', name: 'invoice_delete')]
-    public function delete(Invoice $invoice, EntityManagerInterface $em): Response
+    #[Route('/delete/{id}', name: 'invoice_delete', methods: ['POST'])]
+    public function delete(Request $request, Invoice $invoice, EntityManagerInterface $em): Response
     {
-        $em->remove($invoice);
-        $em->flush();
+        // Vérifie le token CSRF pour la sécurité
+        if ($this->isCsrfTokenValid('delete' . $invoice->getId(), $request->request->get('_token'))) {
+            $em->remove($invoice);
+            $em->flush();
 
-        $this->addFlash('success', 'Facture supprimée.');
+            $this->addFlash('success', 'Facture supprimée avec succès.');
+        } else {
+            $this->addFlash('error', 'Token de sécurité invalide. La facture n’a pas été supprimée.');
+        }
+
         return $this->redirectToRoute('invoice_index');
     }
 
