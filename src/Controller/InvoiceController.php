@@ -4,6 +4,7 @@ namespace App\Controller;
 
 use Dompdf\Dompdf;
 use Dompdf\Options;
+use App\Repository\InvoiceRepository;
 use App\Entity\Invoice;
 use App\Entity\InvoiceLine;
 use App\Service\InvoiceXmlGenerator;
@@ -17,11 +18,61 @@ use Symfony\Component\Routing\Annotation\Route;
 
 class InvoiceController extends AbstractController
 {
-    #[Route('/invoice/new', name: 'invoice_new', methods: ['GET'])]
+    #[Route('/new', name: 'invoice_new', methods: ['GET'])]
     public function new(): Response
     {
         return $this->render('invoice/new.html.twig');
     }
+
+    #[Route('/', name: 'invoice_index')]
+    public function index(InvoiceRepository $invoiceRepository): Response
+    {
+        $invoices = $invoiceRepository->findAll();
+
+        return $this->render('invoice/index.html.twig', [
+            'invoices' => $invoices,
+        ]);
+    }
+
+    #[Route('/show/{id}', name: 'invoice_show')]
+    public function show(Invoice $invoice): Response
+    {
+        return $this->render('invoice/show.html.twig', [
+            'invoice' => $invoice,
+        ]);
+    }
+
+    #[Route('/edit/{id}', name: 'invoice_edit')]
+    public function edit(Request $request, Invoice $invoice, EntityManagerInterface $em): Response
+    {
+        if ($request->isMethod('POST')) {
+            $invoice->setInvoiceNumber($request->request->get('invoiceNumber'));
+            $invoice->setIssueDate(new \DateTime($request->request->get('issueDate')));
+            $invoice->setCurrency($request->request->get('currency'));
+            $invoice->setPaymentReference($request->request->get('paymentReference'));
+            $invoice->setNote($request->request->get('note'));
+
+            $em->flush();
+
+            $this->addFlash('success', 'Facture mise à jour.');
+            return $this->redirectToRoute('invoice_index');
+        }
+
+        return $this->render('invoice/edit.html.twig', [
+            'invoice' => $invoice,
+        ]);
+    }
+
+    #[Route('/delete/{id}', name: 'invoice_delete')]
+    public function delete(Invoice $invoice, EntityManagerInterface $em): Response
+    {
+        $em->remove($invoice);
+        $em->flush();
+
+        $this->addFlash('success', 'Facture supprimée.');
+        return $this->redirectToRoute('invoice_index');
+    }
+
 
     #[Route('/invoice/create-facturx', name: 'invoice_create_facturx', methods: ['POST'])]
     public function createFacturx(

@@ -1,0 +1,50 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Facture
+	{{ invoice.invoiceNumber }}
+{% endblock %}
+
+{% block body %}
+	<div class="mb-6 flex justify-between items-center">
+		<h1 class="text-2xl font-bold">🧾 Facture
+			{{ invoice.invoiceNumber }}</h1>
+		<a href="{{ path('invoice_index') }}" class="bg-gray-200 hover:bg-gray-300 text-gray-800 px-4 py-2 rounded-lg">
+			⬅ Retour
+		</a>
+	</div>
+
+	<div class="bg-white shadow rounded-lg p-6">
+		<dl class="grid grid-cols-1 md:grid-cols-2 gap-x-8 gap-y-4">
+			<div>
+				<dt class="font-semibold text-gray-700">ID :</dt>
+				<dd class="text-gray-900">{{ invoice.id }}</dd>
+			</div>
+			<div>
+				<dt class="font-semibold text-gray-700">Numéro :</dt>
+				<dd class="text-gray-900">{{ invoice.invoiceNumber }}</dd>
+			</div>
+			<div>
+				<dt class="font-semibold text-gray-700">Date d’émission :</dt>
+				<dd class="text-gray-900">{{ invoice.issueDate|date('d/m/Y') }}</dd>
+			</div>
+			<div>
+				<dt class="font-semibold text-gray-700">Devise :</dt>
+				<dd class="text-gray-900">{{ invoice.currency }}</dd>
+			</div>
+			<div class="md:col-span-2">
+				<dt class="font-semibold text-gray-700">Note :</dt>
+				<dd class="text-gray-900">{{ invoice.note ?? '—' }}</dd>
+			</div>
+		</dl>
+
+		<div class="mt-6 flex space-x-3">
+			<a href="{{ path('invoice_edit', {id: invoice.id}) }}" class="bg-yellow-500 hover:bg-yellow-600 text-white px-4 py-2 rounded-lg">
+				✏ Modifier
+			</a>
+			<a href="{{ path('invoice_delete', {id: invoice.id}) }}" class="bg-red-500 hover:bg-red-600 text-white px-4 py-2 rounded-lg" onclick="return confirm('Voulez-vous vraiment supprimer cette facture ?');">
+				🗑 Supprimer
+			</a>
+		</div>
+	</div>
+{% endblock %}
+
