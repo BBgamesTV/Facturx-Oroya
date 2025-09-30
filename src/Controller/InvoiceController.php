@@ -2,13 +2,14 @@
 
 namespace App\Controller;
 
+use Dompdf\Dompdf;
+use Dompdf\Options;
 use App\Entity\Invoice;
 use App\Entity\InvoiceLine;
 use App\Service\InvoiceXmlGenerator;
 use App\Service\FacturxService;
+use App\Service\PdfGeneratorService;
 use Doctrine\ORM\EntityManagerInterface;
-use Dompdf\Dompdf;
-use Dompdf\Options;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
@@ -27,7 +28,8 @@ class InvoiceController extends AbstractController
         Request $request,
         EntityManagerInterface $em,
         InvoiceXmlGenerator $xmlGenerator,
-        FacturxService $facturxService
+        FacturxService $facturxService,
+        PdfGeneratorService $pdfGeneratorService
     ): Response {
         $data = $request->request->all();
 
@@ -37,6 +39,17 @@ class InvoiceController extends AbstractController
         $invoice->setIssueDate(new \DateTime($data['issueDate'] ?? 'now'));
         $invoice->setCurrency($data['currency'] ?? 'NOK');
         $invoice->setPaymentReference($data['paymentReference'] ?? null);
+        $invoice->setNote($data['note'] ?? null);
+
+        // Helper pour nettoyer
+        function cleanArray(array $data): array
+        {
+            return array_filter($data, fn($v) => $v !== null && $v !== '');
+        }
+
+        $invoice->setSeller(array_filter($data['seller'] ?? [], fn($v) => $v !== null && $v !== ''));
+
+        $invoice->setBuyer(array_filter($data['buyer'] ?? [], fn($v) => $v !== null && $v !== ''));
 
         // --- Création des lignes ---
         if (!empty($data['lines'])) {
@@ -46,15 +59,16 @@ class InvoiceController extends AbstractController
                 $line->setProductName($lineData['productName'] ?? '');
                 $line->setSellerId($lineData['sellerId'] ?? '');
                 $line->setGlobalId($lineData['globalId'] ?? '');
-                $line->setDescription($lineData['description'] ?? null);
+                $line->setDescription($lineData['description'] ?? '');
                 $line->setQuantity(floatval($lineData['quantity'] ?? 1));
                 $line->setUnit($lineData['unit'] ?? 'NAR');
-                $line->setGrossPrice(isset($lineData['grossPrice']) ? floatval($lineData['grossPrice']) : null);
-                $line->setNetPrice(isset($lineData['netPrice']) ? floatval($lineData['netPrice']) : null);
-                $line->setTaxRate(isset($lineData['taxRate']) ? floatval($lineData['taxRate']) : null);
+                $line->setGrossPrice(isset($lineData['grossPrice']) ? floatval($lineData['grossPrice']) : 0);
+                $line->setNetPrice(isset($lineData['netPrice']) ? floatval($lineData['netPrice']) : 0);
+                $line->setTaxRate(isset($lineData['taxRate']) ? floatval($lineData['taxRate']) : 0);
                 $line->setTaxCategory($lineData['taxCategory'] ?? 'S');
                 $line->setNote($lineData['note'] ?? null);
 
+                // Allowances / Charges
                 if (!empty($lineData['allowances'])) {
                     foreach ($lineData['allowances'] as $allowance) {
                         $line->addAllowance(
@@ -65,6 +79,7 @@ class InvoiceController extends AbstractController
                     }
                 }
 
+                // Lier la ligne à la facture
                 $invoice->addLine($line);
             }
         }
@@ -84,14 +99,31 @@ class InvoiceController extends AbstractController
         $xmlString = $xmlGenerator->generateXml($invoice);
         file_put_contents($xmlFilePath, $xmlString);
 
-        // --- Génération PDF HTML avec Dompdf ---
-        $pdfHtml = $this->renderView('invoice/pdf.html.twig', [
-            'invoice' => $invoice
-        ]);
+        // --- Génération PDF HTML avec Twig ---
+        $pdfHtml = $this->renderView('invoice/pdf.html.twig', ['invoice' => $invoice]);
 
-        // --- Génération PDF Factur-X final ---
+        // --- Génération PDF avec Dompdf ---
+        $options = new Options();
+        $options->set('isRemoteEnabled', true);
+        $dompdf = new Dompdf($options);
+        $dompdf->loadHtml($pdfHtml);
+        $dompdf->setPaper('A4', 'portrait');
+        $dompdf->render();
+
+        // --- Sauvegarde PDF
+        $pdfContent = $dompdf->output();
         $pdfFilePath = $folder . '/facture_' . $invoice->getInvoiceNumber() . '.pdf';
-        $facturxService->generateFacturxPdf($xmlFilePath, $pdfFilePath, $pdfHtml);
+        file_put_contents($pdfFilePath, $pdfContent);
+
+        // --- Vérification
+        if (!file_exists($pdfFilePath) || filesize($pdfFilePath) === 0) {
+            throw new \Exception("Le PDF n’a pas été généré correctement !");
+        }
+
+        // --- Fusion XML + PDF pour Factur-X
+        $facturxService->generateFacturxPdf($xmlFilePath, $pdfFilePath, $pdfContent);
+
+
 
         $this->addFlash('success', 'Facture Factur-X créée avec succès !');
 

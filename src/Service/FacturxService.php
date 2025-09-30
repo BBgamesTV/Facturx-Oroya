@@ -17,7 +17,7 @@ class FacturxService
             $pdfContent,      // ton PDF (string binaire)
             $xmlContent,      // ton XML Factur-X
             null,             // profil (auto-détection si null)
-            true,             // validation XSD
+            false,             // validation XSD
             [],               // pièces jointes additionnelles
             false,            // ajouter logo Factur-X en haut de la 1ère page
             'Data'            // relation
