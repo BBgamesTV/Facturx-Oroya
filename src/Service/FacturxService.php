@@ -24,3 +24,4 @@ class FacturxService
         file_put_contents($outputPath, $facturxPdf);
     }
 }
+    
