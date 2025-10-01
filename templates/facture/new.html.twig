@@ -4,94 +4,134 @@
 {% endblock %}
 
 {% block body %}
-	<h1>Créer une nouvelle facture</h1>
+	<h1 class="text-2xl font-semibold mb-6">Créer une nouvelle facture</h1>
 
-	<form method="post">
-		<label for="numeroFacture">Numéro facture:</label>
-		<input type="text" id="numeroFacture" name="numeroFacture" required><br>
+	<form method="post" class="bg-white shadow rounded px-8 pt-6 pb-8 mb-6 grid grid-cols-1 md:grid-cols-2 gap-6">
+		<div>
+			<label for="numeroFacture" class="block text-sm font-medium mb-1">Numéro facture:</label>
+			<input type="text" id="numeroFacture" name="numeroFacture" required class="w-full border rounded px-3 py-2 mb-4">
 
-		<label for="dateFacture">Date facture:</label>
-		<input type="date" id="dateFacture" name="dateFacture" required><br>
+			<label for="dateFacture" class="block text-sm font-medium mb-1">Date facture:</label>
+			<input type="date" id="dateFacture" name="dateFacture" required class="w-full border rounded px-3 py-2 mb-4">
 
-		<label for="typeFacture">Type facture:</label>
-		<input type="text" id="typeFacture" name="typeFacture" maxlength="10" required><br>
+			<label for="typeFacture" class="block text-sm font-medium mb-1">Type facture:</label>
+			<input type="text" id="typeFacture" name="typeFacture" maxlength="10" required class="w-full border rounded px-3 py-2 mb-4">
 
-		<label for="devise">Devise:</label>
-		<input type="text" id="devise" name="devise" maxlength="3" required><br>
+			<select id="devise" name="devise" maxlength="3" required class="w-full border rounded px-3 py-2 mb-4">
+				<option value="">Sélectionner une devise</option>
+				<option value="EUR">Euro</option>
+				<option value="USD">Dollar US</option>
+				<option value="GBP">Livre Sterling</option>
+				<option value="CHF">Franc Suisse</option>
+				<option value="JPY">Yen</option>
+				<!-- ... ajouter tous les autres codes -->
+			</select>
 
-		<label for="nomFournisseur">Nom fournisseur:</label>
-		<input type="text" id="nomFournisseur" name="nomFournisseur" required><br>
 
-		<label for="sirenFournisseur">SIREN fournisseur:</label>
-		<input type="text" id="sirenFournisseur" name="sirenFournisseur" maxlength="20" required><br>
+			<label for="nomFournisseur" class="block text-sm font-medium mb-1">Nom fournisseur:</label>
+			<input type="text" id="nomFournisseur" name="nomFournisseur" required class="w-full border rounded px-3 py-2 mb-4">
 
-		<label for="siretFournisseur">SIRET fournisseur:</label>
-		<input type="text" id="siretFournisseur" name="siretFournisseur"><br>
+			<label for="sirenFournisseur" class="block text-sm font-medium mb-1">SIREN fournisseur:</label>
+			<input type="text" id="sirenFournisseur" name="sirenFournisseur" maxlength="20" required class="w-full border rounded px-3 py-2 mb-4">
 
-		<label for="tvaFournisseur">TVA fournisseur:</label>
-		<input type="text" id="tvaFournisseur" name="tvaFournisseur"><br>
+			<label for="siretFournisseur" class="block text-sm font-medium mb-1">SIRET fournisseur:</label>
+			<input type="text" id="siretFournisseur" name="siretFournisseur" class="w-full border rounded px-3 py-2 mb-4">
 
-		<label for="codePaysFournisseur">Pays fournisseur (code):</label>
-		<input type="text" id="codePaysFournisseur" name="codePaysFournisseur" maxlength="2" required><br>
+			<label for="tvaFournisseur" class="block text-sm font-medium mb-1">TVA fournisseur:</label>
+			<input type="text" id="tvaFournisseur" name="tvaFournisseur" class="w-full border rounded px-3 py-2 mb-4">
 
-		<label for="emailFournisseur">Email fournisseur:</label>
-		<input type="email" id="emailFournisseur" name="emailFournisseur" required><br>
+			<select id="codePaysFournisseur" name="codePaysFournisseur" required class="w-full border rounded px-3 py-2 mb-4">
+				<option value="">Sélectionner un pays</option>
+				<option value="FR">France</option>
+				<option value="DE">Allemagne</option>
+				<option value="IT">Italie</option>
+				<option value="ES">Espagne</option>
+				<option value="BE">Belgique</option>
+				<option value="GB">Royaume-Uni</option>
+				<!-- ... ajouter tous les autres codes -->
+			</select>
 
-		<label for="nomAcheteur">Nom acheteur:</label>
-		<input type="text" id="nomAcheteur" name="nomAcheteur" required><br>
 
-		<label for="sirenAcheteur">SIREN acheteur:</label>
-		<input type="text" id="sirenAcheteur" name="sirenAcheteur" maxlength="20" required><br>
+			<label for="emailFournisseur" class="block text-sm font-medium mb-1">Email fournisseur:</label>
+			<input type="email" id="emailFournisseur" name="emailFournisseur" required class="w-full border rounded px-3 py-2 mb-4">
+		</div>
 
-		<label for="emailAcheteur">Email acheteur:</label>
-		<input type="email" id="emailAcheteur" name="emailAcheteur" required><br>
+		<div>
+			<label for="nomAcheteur" class="block text-sm font-medium mb-1">Nom acheteur:</label>
+			<input type="text" id="nomAcheteur" name="nomAcheteur" required class="w-full border rounded px-3 py-2 mb-4">
 
-		<label for="commandeAcheteur">Commande acheteur:</label>
-		<input type="text" id="commandeAcheteur" name="commandeAcheteur"><br>
+			<label for="sirenAcheteur" class="block text-sm font-medium mb-1">SIREN acheteur:</label>
+			<input type="text" id="sirenAcheteur" name="sirenAcheteur" maxlength="20" required class="w-full border rounded px-3 py-2 mb-4">
 
-		<label for="totalHT">Montant HT:</label>
-		<input type="number" step="0.01" id="totalHT" name="totalHT" required><br>
+			<label for="emailAcheteur" class="block text-sm font-medium mb-1">Email acheteur:</label>
+			<input type="email" id="emailAcheteur" name="emailAcheteur" required class="w-full border rounded px-3 py-2 mb-4">
 
-		<label for="totalTVA">Montant TVA:</label>
-		<input type="number" step="0.01" id="totalTVA" name="totalTVA" required><br>
+			<label for="commandeAcheteur" class="block text-sm font-medium mb-1">Commande acheteur:</label>
+			<input type="text" id="commandeAcheteur" name="commandeAcheteur" class="w-full border rounded px-3 py-2 mb-4">
 
-		<label for="totalTTC">Montant TTC:</label>
-		<input type="number" step="0.01" id="totalTTC" name="totalTTC" required><br>
+			<label for="totalHT" class="block text-sm font-medium mb-1">Montant HT:</label>
+			<input type="number" step="0.01" id="totalHT" name="totalHT" required class="w-full border rounded px-3 py-2 mb-4">
 
-		<label for="netAPayer">Net à payer:</label>
-		<input type="number" step="0.01" id="netAPayer" name="netAPayer" required><br>
+			<label for="totalTVA" class="block text-sm font-medium mb-1">Montant TVA:</label>
+			<input type="number" step="0.01" id="totalTVA" name="totalTVA" required class="w-full border rounded px-3 py-2 mb-4">
 
-		<label for="dateEcheance">Date échéance:</label>
-		<input type="date" id="dateEcheance" name="dateEcheance"><br>
+			<label for="totalTTC" class="block text-sm font-medium mb-1">Montant TTC:</label>
+			<input type="number" step="0.01" id="totalTTC" name="totalTTC" required class="w-full border rounded px-3 py-2 mb-4">
 
-		<label for="dateLivraison">Date livraison:</label>
-		<input type="date" id="dateLivraison" name="dateLivraison"><br>
+			<label for="netAPayer" class="block text-sm font-medium mb-1">Net à payer:</label>
+			<input type="number" step="0.01" id="netAPayer" name="netAPayer" required class="w-full border rounded px-3 py-2 mb-4">
 
-		<label for="modePaiement">Mode paiement:</label>
-		<input type="text" id="modePaiement" name="modePaiement"><br>
+			<label for="dateEcheance" class="block text-sm font-medium mb-1">Date échéance:</label>
+			<input type="date" id="dateEcheance" name="dateEcheance" class="w-full border rounded px-3 py-2 mb-4">
 
-		<label for="referencePaiement">Référence paiement:</label>
-		<input type="text" id="referencePaiement" name="referencePaiement"><br>
+			<label for="dateLivraison" class="block text-sm font-medium mb-1">Date livraison:</label>
+			<input type="date" id="dateLivraison" name="dateLivraison" class="w-full border rounded px-3 py-2 mb-4">
 
-		<label for="tvaDetails">Détail TVA (JSON):</label>
-		<input type="text" id="tvaDetails" name="tvaDetails"><br>
+			<select id="modePaiement" name="modePaiement" class="w-full border rounded px-3 py-2 mb-4">
+				<option value="">Sélectionner un mode</option>
+				<option value="10">Espèces</option>
+				<option value="20">Chèque</option>
+				<option value="30">Virement crédit</option>
+				<option value="48">Carte bancaire</option>
+				<option value="49">Prélèvement</option>
+				<option value="58">Virement SEPA</option>
+				<option value="59">Prélèvement SEPA</option>
+				<!-- ... ajouter tous les autres codes disponibles -->
+			</select>
 
-		<label for="remisePied">Remise pied:</label>
-		<input type="number" step="0.01" id="remisePied" name="remisePied"><br>
 
-		<label for="chargesPied">Charges pied:</label>
-		<input type="number" step="0.01" id="chargesPied" name="chargesPied"><br>
+			<label for="referencePaiement" class="block text-sm font-medium mb-1">Référence paiement:</label>
+			<input type="text" id="referencePaiement" name="referencePaiement" class="w-full border rounded px-3 py-2 mb-4">
 
-		<label for="referenceContrat">Référence contrat:</label>
-		<input type="text" id="referenceContrat" name="referenceContrat"><br>
+			<label for="tvaDetails" class="block text-sm font-medium mb-1">Détail TVA (JSON):</label>
+			<input type="text" id="tvaDetails" name="tvaDetails" class="w-full border rounded px-3 py-2 mb-4">
 
-		<label for="referenceBonLivraison">Référence BL:</label>
-		<input type="text" id="referenceBonLivraison" name="referenceBonLivraison"><br>
+			<label for="remisePied" class="block text-sm font-medium mb-1">Remise pied:</label>
+			<input type="number" step="0.01" value="0" id="remisePied" name="remisePied" class="w-full border rounded px-3 py-2 mb-4">
 
-		<label for="profilFacturX">Profil Factur-X:</label>
-		<input type="text" id="profilFacturX" name="profilFacturX" maxlength="20" required><br>
+			<label for="chargesPied" class="block text-sm font-medium mb-1">Charges pied:</label>
+			<input type="number" step="0.01" value="0" id="chargesPied" name="chargesPied" class="w-full border rounded px-3 py-2 mb-4">
 
-		<button type="submit">Enregistrer la facture</button>
+			<label for="referenceContrat" class="block text-sm font-medium mb-1">Référence contrat:</label>
+			<input type="text" id="referenceContrat" name="referenceContrat" class="w-full border rounded px-3 py-2 mb-4">
+
+			<label for="referenceBonLivraison" class="block text-sm font-medium mb-1">Référence BL:</label>
+			<input type="text" id="referenceBonLivraison" name="referenceBonLivraison" class="w-full border rounded px-3 py-2 mb-4">
+
+			<select id="profilFacturX" name="profilFacturX" maxlength="20" required class="w-full border rounded px-3 py-2 mb-4">
+				<option value="">Sélectionner un profil</option>
+				<option value="MINIMUM">Minimum</option>
+				<option value="BASIC">Basic</option>
+				<option value="EN16931">EN16931</option>
+				<option value="EXTENDED">Extended</option>
+				<!-- ... selon usage officiel -->
+			</select>
+
+		</div>
+		<div class="col-span-1 md:col-span-2 flex justify-end">
+			<button type="submit" class="bg-indigo-600 text-white font-semibold px-6 py-2 rounded hover:bg-indigo-700 transition">
+				Enregistrer la facture
+			</button>
+		</div>
 	</form>
 {% endblock %}
-

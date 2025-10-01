@@ -82,10 +82,10 @@ class Facture
     private ?array $tvaDetails = null;
 
     #[ORM\Column(type: "decimal", precision: 10, scale: 2, nullable: true)]
-    private ?float $remisePied = null;
+    private ?float $remisePied = 0;
 
     #[ORM\Column(type: "decimal", precision: 10, scale: 2, nullable: true)]
-    private ?float $chargesPied = null;
+    private ?float $chargesPied = 0;
 
     #[ORM\Column(type: "string", length: 255, nullable: true)]
     private ?string $referenceContrat = null;

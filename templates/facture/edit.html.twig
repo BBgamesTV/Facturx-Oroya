@@ -1,0 +1,23 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Modifier Facture{% endblock %}
+
+{% block body %}
+<h1 class="text-2xl font-bold mb-6 text-gray-800">✏ Modifier la Facture {{ facture.numeroFacture }}</h1>
+
+<div class="bg-white p-6 rounded-lg shadow-md">
+    {{ form_start(form, { 'attr': { 'class': 'space-y-4' } }) }}
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+            {{ form_row(form.numeroFacture, { 'attr': { 'class': 'w-full p-2 border rounded' } }) }}
+            {{ form_row(form.dateFacture, { 'attr': { 'class': 'w-full p-2 border rounded' } }) }}
+            {{ form_row(form.nomFournisseur, { 'attr': { 'class': 'w-full p-2 border rounded' } }) }}
+            {{ form_row(form.nomAcheteur, { 'attr': { 'class': 'w-full p-2 border rounded' } }) }}
+            {{ form_row(form.totalHT, { 'attr': { 'class': 'w-full p-2 border rounded' } }) }}
+            {{ form_row(form.totalTTC, { 'attr': { 'class': 'w-full p-2 border rounded' } }) }}
+        </div>
+        <button class="px-4 py-2 bg-green-600 text-white rounded hover:bg-green-700">💾 Enregistrer</button>
+    {{ form_end(form) }}
+</div>
+
+<a href="{{ path('facture_index') }}" class="inline-block mt-4 px-4 py-2 bg-gray-500 text-white rounded hover:bg-gray-600">⬅ Retour</a>
+{% endblock %}

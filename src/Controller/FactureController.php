@@ -3,6 +3,8 @@
 namespace App\Controller;
 
 use App\Entity\Facture;
+use App\Form\FactureType;
+use App\Repository\FactureRepository;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
@@ -56,12 +58,61 @@ class FactureController extends AbstractController
             $em->flush();
 
             // Redirection ou message de succès
-            return $this->redirectToRoute('facture_success');
+            return $this->redirectToRoute('facture_index');
         }
 
         // Affiche un formulaire simple (à remplacer par ton propre template)
         return $this->render('facture/new.html.twig', [
             'facture' => $facture
         ]);
+    }
+
+    #[Route('/facture/index', name: 'facture_index', methods: ['GET'])]
+    public function index(FactureRepository $factureRepository): Response
+    {
+        $factures = $factureRepository->findAll();
+
+        return $this->render('facture/index.html.twig', [
+            'factures' => $factures,
+        ]);
+    }
+
+        #[Route('/{id}', name: 'facture_show', methods: ['GET'])]
+    public function show(Facture $facture): Response
+    {
+        return $this->render('facture/show.html.twig', [
+            'facture' => $facture,
+        ]);
+    }
+
+    #[Route('/{id}/edit', name: 'facture_edit', methods: ['GET', 'POST'])]
+    public function edit(Request $request, Facture $facture, EntityManagerInterface $em): Response
+    {
+        $form = $this->createForm(FactureType::class, $facture);
+        $form->handleRequest($request);
+
+        if ($form->isSubmitted() && $form->isValid()) {
+            $em->flush();
+
+            $this->addFlash('success', 'Facture mise à jour avec succès ✅');
+            return $this->redirectToRoute('facture_index');
+        }
+
+        return $this->render('facture/edit.html.twig', [
+            'facture' => $facture,
+            'form' => $form->createView(),
+        ]);
+    }
+
+    #[Route('/{id}/delete', name: 'facture_delete', methods: ['POST'])]
+    public function delete(Request $request, Facture $facture, EntityManagerInterface $em): Response
+    {
+        if ($this->isCsrfTokenValid('delete'.$facture->getId(), $request->request->get('_token'))) {
+            $em->remove($facture);
+            $em->flush();
+            $this->addFlash('danger', 'Facture supprimée ❌');
+        }
+
+        return $this->redirectToRoute('facture_index');
     }
 }
